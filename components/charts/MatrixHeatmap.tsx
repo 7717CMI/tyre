@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { useDashboardStore } from '@/lib/store'
-import { filterData, resolveGeographies } from '@/lib/data-processor'
+import { filterData } from '@/lib/data-processor'
 
 interface MatrixHeatmapProps {
   title?: string
@@ -21,16 +21,12 @@ export function MatrixHeatmap({ title, height = 600 }: MatrixHeatmapProps) {
       ? data.data.value.geography_segment_matrix
       : data.data.volume.geography_segment_matrix
 
-    // Resolve geographies for region expansion
-    const effectiveGeographies = resolveGeographies(filters.geographies, filters.viewMode, data)
-    const resolvedFilters = { ...filters, geographies: effectiveGeographies }
-
     // Filter data
-    const filtered = filterData(dataset, resolvedFilters)
+    const filtered = filterData(dataset, filters)
 
     // Check if we need Global-to-regional mapping
     const regionalGeographies = ['North America', 'Europe', 'Asia Pacific', 'Latin America', 'Middle East', 'Africa', 'Middle East & Africa', 'ASEAN', 'SAARC Region', 'CIS Region']
-    const hasRegionalSelection = effectiveGeographies.some(g => regionalGeographies.includes(g))
+    const hasRegionalSelection = filters.geographies.some(g => regionalGeographies.includes(g))
     const hasOnlyGlobalRecords = filtered.every(r => r.geography === 'Global')
     const needsGlobalMapping = hasRegionalSelection && hasOnlyGlobalRecords && !filters.geographies.includes('Global')
 

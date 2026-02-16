@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { useDashboardStore } from '@/lib/store'
-import { filterData, resolveGeographies } from '@/lib/data-processor'
+import { filterData } from '@/lib/data-processor'
 import { ArrowUp, ArrowDown, Download } from 'lucide-react'
 
 interface ComparisonTableProps {
@@ -23,12 +23,8 @@ export function ComparisonTable({ title, height = 600 }: ComparisonTableProps) {
       ? data.data.value.geography_segment_matrix
       : data.data.volume.geography_segment_matrix
 
-    // Resolve geographies for region expansion
-    const effectiveGeographies = resolveGeographies(filters.geographies, filters.viewMode, data)
-    const resolvedFilters = { ...filters, geographies: effectiveGeographies }
-
     // Filter data
-    const filtered = filterData(dataset, resolvedFilters)
+    const filtered = filterData(dataset, filters)
 
     // Get the selected year (use base year or middle of range)
     const year = filters.yearRange[0] + Math.floor((filters.yearRange[1] - filters.yearRange[0]) / 2)

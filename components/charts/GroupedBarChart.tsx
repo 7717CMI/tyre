@@ -12,7 +12,7 @@ import {
   ResponsiveContainer
 } from 'recharts'
 import { CHART_THEME, getChartColor, CHART_COLORS } from '@/lib/chart-theme'
-import { filterData, prepareGroupedBarData, prepareIntelligentMultiLevelData, getUniqueGeographies, getUniqueSegments, resolveGeographies } from '@/lib/data-processor'
+import { filterData, prepareGroupedBarData, prepareIntelligentMultiLevelData, getUniqueGeographies, getUniqueSegments } from '@/lib/data-processor'
 import { useDashboardStore } from '@/lib/store'
 import type { DataRecord } from '@/lib/types'
 
@@ -67,18 +67,14 @@ export function GroupedBarChart({ title, height = 400 }: GroupedBarChartProps) {
       willCallFunction: effectiveAggregationLevel !== null ? 'prepareGroupedBarData' : 'prepareIntelligentMultiLevelData'
     })
 
-    // Resolve effective geographies: when a region is selected with auto-expanded countries,
-    // use only the region in segment-mode (avoids double-counting) or only countries in geography-mode
-    const effectiveGeographies = resolveGeographies(filters.geographies, filters.viewMode, data)
-
-    // Create modified filters with the effective aggregation level and resolved geographies
+    // Create modified filters with the effective aggregation level
+    // This ensures filterData uses our computed level, not the raw filter value
     const modifiedFilters = {
       ...filters,
-      geographies: effectiveGeographies,
       aggregationLevel: effectiveAggregationLevel
     }
 
-    // Filter data with the correct effective aggregation level and resolved geographies
+    // Filter data with the correct effective aggregation level
     let filtered = filterData(dataset, modifiedFilters)
 
     // If showLevel1Totals is enabled in geography mode, also include Level 1 aggregated records
@@ -154,8 +150,8 @@ export function GroupedBarChart({ title, height = 400 }: GroupedBarChartProps) {
       usingFunction: effectiveAggregationLevel !== null ? 'prepareGroupedBarData' : 'prepareIntelligentMultiLevelData'
     })
 
-    // Determine if we're using stacked bars (use effective geographies, not raw filter count)
-    const isStacked = (filters.viewMode === 'segment-mode' && effectiveGeographies.length > 1) ||
+    // Determine if we're using stacked bars
+    const isStacked = (filters.viewMode === 'segment-mode' && filters.geographies.length > 1) ||
                       (filters.viewMode === 'geography-mode' && filters.segments.length > 1)
 
     let series: string[] = []

@@ -115,7 +115,7 @@ export function YearRangeSlider() {
 
       {/* Base Year Indicator */}
       <div className="text-xs text-black text-center">
-        Base Year: <span className="font-medium text-black">{base_year}</span>
+        Base Year: <span className="font-medium text-black">2023</span>
       </div>
     </div>
   )

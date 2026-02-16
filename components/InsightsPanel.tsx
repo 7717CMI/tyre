@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import { TrendingUp, TrendingDown, Minus, AlertCircle, Lightbulb, Target } from 'lucide-react'
 import { useDashboardStore } from '@/lib/store'
-import { filterData, resolveGeographies } from '@/lib/data-processor'
+import { filterData } from '@/lib/data-processor'
 import { generateInsights, findCrossovers, type Insight } from '@/lib/insights-generator'
 
 export function InsightsPanel() {
@@ -16,13 +16,10 @@ export function InsightsPanel() {
       ? data.data.value.geography_segment_matrix
       : data.data.volume.geography_segment_matrix
 
-    const effectiveGeographies = resolveGeographies(filters.geographies, filters.viewMode, data)
-    const resolvedFilters = { ...filters, geographies: effectiveGeographies }
-
-    const filtered = filterData(dataset, resolvedFilters)
-
+    const filtered = filterData(dataset, filters)
+    
     // Generate main insights
-    const mainInsights = generateInsights(filtered, resolvedFilters, currency || 'USD', data.metadata.volume_unit || 'Million Units')
+    const mainInsights = generateInsights(filtered, filters, currency || 'USD', data.metadata.volume_unit || 'Million Units')
     
     // Find crossover points
     const crossovers = findCrossovers(filtered, filters)

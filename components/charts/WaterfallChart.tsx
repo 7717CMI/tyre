@@ -13,7 +13,7 @@ import {
   Cell
 } from 'recharts'
 import { CHART_THEME, getChartColor } from '@/lib/chart-theme'
-import { filterData, prepareWaterfallData, resolveGeographies } from '@/lib/data-processor'
+import { filterData, prepareWaterfallData } from '@/lib/data-processor'
 import { useDashboardStore } from '@/lib/store'
 
 interface WaterfallChartProps {
@@ -40,11 +40,8 @@ export function WaterfallChart({ title, height = 400 }: WaterfallChartProps) {
       ? data.data.value.geography_segment_matrix
       : data.data.volume.geography_segment_matrix
 
-    const effectiveGeographies = resolveGeographies(filters.geographies, filters.viewMode, data)
-    const resolvedFilters = { ...filters, geographies: effectiveGeographies }
-
-    const filtered = filterData(dataset, resolvedFilters)
-    const waterfallData = prepareWaterfallData(filtered, resolvedFilters)
+    const filtered = filterData(dataset, filters)
+    const waterfallData = prepareWaterfallData(filtered, filters)
 
     // Calculate cumulative values for waterfall effect
     const processedData: WaterfallDataPoint[] = []

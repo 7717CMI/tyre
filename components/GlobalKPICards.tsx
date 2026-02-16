@@ -200,7 +200,7 @@ export function GlobalKPICards() {
             </div>
             <div>
               <p className="text-[10px] text-black uppercase tracking-wider font-semibold">
-                {kpiData.dataTypeLabel} 2023
+                {kpiData.dataTypeLabel} 2024
               </p>
               <p className="text-base font-bold text-black leading-tight">
                 {kpiData.dataType === 'value' && kpiData.isINR
@@ -238,7 +238,7 @@ export function GlobalKPICards() {
             </div>
             <div>
               <p className="text-[10px] text-black uppercase tracking-wider font-semibold">
-                CAGR (2023-2031)
+                CAGR (2024-2031)
               </p>
               <p className="text-base font-bold text-black leading-tight">
                 {kpiData.cagr.toFixed(2)}%
@@ -253,7 +253,7 @@ export function GlobalKPICards() {
             </div>
             <div>
               <p className="text-[10px] text-black uppercase tracking-wider font-semibold">
-                Absolute Growth (2023-2031)
+                Absolute Growth (2024-2031)
               </p>
               <p className="text-base font-bold text-black leading-tight">
                 {kpiData.dataType === 'value' && kpiData.isINR

@@ -247,11 +247,9 @@ export function EnhancedFilterPanel() {
 
   if (!data) return null
 
-  // Get all segment types - exclude "By Region"/"By State"/"By Country" (handled by geography filter)
-  const regionalSegmentTypes = ['By Region', 'By State', 'By Country']
-  const allSegmentTypes = Object.keys(data.dimensions.segments).filter(
-    type => !regionalSegmentTypes.includes(type)
-  )
+  // Get all segment types
+  // For volume mode, only show segment types that have actual volume records
+  const allSegmentTypes = Object.keys(data.dimensions.segments)
   const segmentTypes = filters.dataType === 'volume'
     ? (() => {
         const volumeRecords = data.data.volume.geography_segment_matrix
@@ -315,25 +313,36 @@ export function EnhancedFilterPanel() {
         </label>
         <GeographyMultiSelect />
         
-        {/* Selected Geography Display - simplified for single-select */}
+        {/* Selected Geographies Display */}
         {filters.geographies.length > 0 && (
           <div className="mt-2 p-1.5 bg-blue-50 rounded">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-1">
               <div className="flex items-center text-xs font-medium text-blue-900">
                 <MapPin className="h-3 w-3 mr-1" />
-                {filters.geographies[0]}
-                {filters.geographies.length > 1 && (
-                  <span className="ml-1 text-blue-600 font-normal">
-                    (+{filters.geographies.length - 1} countries)
-                  </span>
-                )}
+                Selected ({filters.geographies.length})
               </div>
               <button
                 onClick={handleClearAllGeographies}
                 className="text-xs text-blue-600 hover:text-blue-800"
               >
-                Clear
+                Clear All
               </button>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {filters.geographies.map(geo => (
+                <span
+                  key={geo}
+                  className="inline-flex items-center px-1.5 py-0.5 text-xs bg-white text-blue-800 rounded border border-blue-200"
+                >
+                  {geo}
+                  <button
+                    onClick={() => handleRemoveGeography(geo)}
+                    className="ml-1 hover:text-blue-900"
+                  >
+                    <X className="h-2.5 w-2.5" />
+                  </button>
+                </span>
+              ))}
             </div>
           </div>
         )}
@@ -536,7 +545,7 @@ export function EnhancedFilterPanel() {
             Comparison Summary
           </div>
           <div className="text-xs text-black space-y-1">
-            <div>📍 {filters.geographies.length > 0 ? filters.geographies[0] : 'All geographies'}{filters.geographies.length > 1 ? ` (+${filters.geographies.length - 1})` : ''}</div>
+            <div>📍 {filters.geographies.length} geographies</div>
             <div>📊 {selectedSegments.length} segments from {new Set(selectedSegments.map(s => s.type)).size} types</div>
             <div>📅 Years: {filters.yearRange[0]} - {filters.yearRange[1]}</div>
             <div>📈 Data: {filters.dataType}</div>

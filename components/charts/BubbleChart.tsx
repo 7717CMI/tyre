@@ -13,7 +13,7 @@ import {
   Cell
 } from 'recharts'
 import { CHART_THEME, getChartColor } from '@/lib/chart-theme'
-import { filterData, resolveGeographies } from '@/lib/data-processor'
+import { filterData } from '@/lib/data-processor'
 import { useDashboardStore } from '@/lib/store'
 import type { DataRecord } from '@/lib/types'
 
@@ -46,10 +46,7 @@ export function BubbleChart({ title, height = 500 }: BubbleChartProps) {
       ? data.data.value.geography_segment_matrix
       : data.data.volume.geography_segment_matrix
 
-    const effectiveGeographies = resolveGeographies(filters.geographies, filters.viewMode, data)
-    const resolvedFilters = { ...filters, geographies: effectiveGeographies }
-
-    const filtered = filterData(dataset, resolvedFilters)
+    const filtered = filterData(dataset, filters)
 
     if (filtered.length === 0) return { bubbles: [], xLabel: '', yLabel: '' }
 

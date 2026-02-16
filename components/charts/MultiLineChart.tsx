@@ -12,7 +12,7 @@ import {
   ResponsiveContainer
 } from 'recharts'
 import { CHART_THEME, getChartColor } from '@/lib/chart-theme'
-import { filterData, prepareLineChartData, prepareIntelligentMultiLevelData, getUniqueGeographies, getUniqueSegments, resolveGeographies } from '@/lib/data-processor'
+import { filterData, prepareLineChartData, prepareIntelligentMultiLevelData, getUniqueGeographies, getUniqueSegments } from '@/lib/data-processor'
 import { useDashboardStore } from '@/lib/store'
 
 interface MultiLineChartProps {
@@ -30,12 +30,7 @@ export function MultiLineChart({ title, height = 400 }: MultiLineChartProps) {
       ? data.data.value.geography_segment_matrix
       : data.data.volume.geography_segment_matrix
 
-    // Resolve effective geographies: when a region is selected with auto-expanded countries,
-    // use only the region in segment-mode or only countries in geography-mode
-    const effectiveGeographies = resolveGeographies(filters.geographies, filters.viewMode, data)
-    const resolvedFilters = { ...filters, geographies: effectiveGeographies }
-
-    const filtered = filterData(dataset, resolvedFilters)
+    const filtered = filterData(dataset, filters)
 
     // Determine effective aggregation level for chart preparation
     // When no segments are selected for the current segment type, default to Level 2
@@ -56,8 +51,8 @@ export function MultiLineChart({ title, height = 400 }: MultiLineChartProps) {
     // Use prepareLineChartData when we have an effective aggregation level
     // This ensures parent segments are shown instead of sub-segments when no segment is selected
     const prepared = effectiveAggregationLevel !== null
-      ? prepareLineChartData(filtered, resolvedFilters)
-      : prepareIntelligentMultiLevelData(filtered, resolvedFilters)
+      ? prepareLineChartData(filtered, filters)
+      : prepareIntelligentMultiLevelData(filtered, filters)
 
     // Extract series from prepared data keys instead of from filtered records
     // This ensures we use the aggregated keys (e.g., "Parenteral") not the original segment names

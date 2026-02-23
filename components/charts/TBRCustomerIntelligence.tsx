@@ -141,9 +141,12 @@ export default function TBRCustomerIntelligence({ title, height = 600 }: TBRCust
   return (
     <div className="w-full">
       <h2 className="text-xl font-bold text-black mb-2">{title || 'Customer Intelligence'}</h2>
-      <div className="mb-4 px-4 py-2.5 bg-amber-50 border border-amber-200 rounded-lg">
+      <div className="mb-4 px-4 py-2.5 bg-amber-50 border border-amber-200 rounded-lg space-y-1">
         <p className="text-sm text-amber-800">
           <span className="font-semibold">Note:</span> This type of data and intelligence will be provided according to every country.
+        </p>
+        <p className="text-sm text-amber-800">
+          <span className="font-semibold">Note:</span> Brand tier classification (A-tier, B-tier, C-tier) will be based on the company's brand segmentation and the brand's market presence in the respective country.
         </p>
       </div>
 
@@ -164,7 +167,11 @@ export default function TBRCustomerIntelligence({ title, height = 600 }: TBRCust
               <thead className="sticky top-0 z-10">
                 {/* Top-level header */}
                 <tr>
-                  <th colSpan={5} rowSpan={2} className="bg-white border border-gray-300"></th>
+                  <th rowSpan={3} className="bg-gray-100 border border-gray-300 px-3 py-2 text-left text-xs font-semibold text-black min-w-[100px]">Country Name</th>
+                  <th rowSpan={3} className="bg-gray-100 border border-gray-300 px-3 py-2 text-left text-xs font-semibold text-black min-w-[140px]">Brand Type</th>
+                  <th rowSpan={3} className="bg-gray-100 border border-gray-300 px-3 py-2 text-left text-xs font-semibold text-black min-w-[110px]">Brand Name</th>
+                  <th rowSpan={3} className="bg-gray-100 border border-gray-300 px-3 py-2 text-left text-xs font-semibold text-black min-w-[150px]">TBR Tire Types</th>
+                  <th rowSpan={3} className="bg-gray-100 border border-gray-300 px-3 py-2 text-left text-xs font-semibold text-black min-w-[140px]">Rim Diameter Class</th>
                   <th colSpan={6} className="bg-yellow-300 border border-gray-300 px-3 py-2 text-center text-sm font-bold text-black">
                     Average Prices US$
                   </th>
@@ -182,13 +189,8 @@ export default function TBRCustomerIntelligence({ title, height = 600 }: TBRCust
                   <th rowSpan={2} className="bg-cyan-200 border border-gray-300 px-2 py-1.5 text-center text-xs font-semibold text-black min-w-[120px]">OEM Business-2025</th>
                   <th rowSpan={2} className="bg-cyan-200 border border-gray-300 px-2 py-1.5 text-center text-xs font-semibold text-black min-w-[120px]">Aftermarket-2025</th>
                 </tr>
-                {/* Column headers */}
+                {/* Year headers */}
                 <tr className="bg-gray-50">
-                  <th className="bg-gray-100 border border-gray-300 px-3 py-2 text-left text-xs font-semibold text-black min-w-[100px]">Country Name</th>
-                  <th className="bg-gray-100 border border-gray-300 px-3 py-2 text-left text-xs font-semibold text-black min-w-[140px]">Brand Type</th>
-                  <th className="bg-gray-100 border border-gray-300 px-3 py-2 text-left text-xs font-semibold text-black min-w-[110px]">Brand Name</th>
-                  <th className="bg-gray-100 border border-gray-300 px-3 py-2 text-left text-xs font-semibold text-black min-w-[150px]">TBR Tire Types</th>
-                  <th className="bg-gray-100 border border-gray-300 px-3 py-2 text-left text-xs font-semibold text-black min-w-[140px]">Rim Diameter Class</th>
                   <th className="bg-yellow-50 border border-gray-300 px-3 py-2 text-center text-xs font-semibold text-black min-w-[70px]">2023</th>
                   <th className="bg-yellow-50 border border-gray-300 px-3 py-2 text-center text-xs font-semibold text-black min-w-[70px]">2024</th>
                   <th className="bg-yellow-50 border border-gray-300 px-3 py-2 text-center text-xs font-semibold text-black min-w-[70px]">2025</th>

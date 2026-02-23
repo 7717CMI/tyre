@@ -31,17 +31,19 @@ export function ComparisonTable({ title, height = 600 }: ComparisonTableProps) {
     const startYear = filters.yearRange[0]
     const endYear = filters.yearRange[1]
 
-    // Helper function to parse CAGR (handles string, number, or null)
-    const parseCAGR = (cagr: any): number => {
-      if (cagr === null || cagr === undefined) return 0
-      if (typeof cagr === 'number') return cagr
-      if (typeof cagr === 'string') {
-        // Extract number from string like "5.2%" or "5.2"
-        const cagrStr = cagr.replace('%', '').trim()
-        return parseFloat(cagrStr) || 0
+    // Calculate CAGR from time series for the selected year range
+    const calcCAGR = (timeSeries: Record<number, number>, start: number, end: number): number => {
+      const startVal = timeSeries[start]
+      const endVal = timeSeries[end]
+      const nYears = end - start
+      if (startVal > 0 && endVal > 0 && nYears > 0) {
+        return (Math.pow(endVal / startVal, 1 / nYears) - 1) * 100
       }
       return 0
     }
+
+    // Calculate total value at the display year for market share computation
+    const totalAtYear = filtered.reduce((sum, r) => sum + (r.time_series[year] || 0), 0)
 
     // Transform to table format
     return filtered.map(record => ({
@@ -51,11 +53,11 @@ export function ComparisonTable({ title, height = 600 }: ComparisonTableProps) {
       currentValue: record.time_series[year] || 0,
       startValue: record.time_series[startYear] || 0,
       endValue: record.time_series[endYear] || 0,
-      growth: record.time_series[startYear] > 0 
+      growth: record.time_series[startYear] > 0
         ? (((record.time_series[endYear] || 0) - (record.time_series[startYear] || 0)) / record.time_series[startYear] * 100)
         : 0,
-      cagr: parseCAGR(record.cagr),
-      marketShare: record.market_share || 0,
+      cagr: calcCAGR(record.time_series, startYear, endYear),
+      marketShare: totalAtYear > 0 ? ((record.time_series[year] || 0) / totalAtYear) * 100 : 0,
       sparkline: Object.entries(record.time_series)
         .filter(([y]) => parseInt(y) >= startYear && parseInt(y) <= endYear)
         .sort(([a], [b]) => parseInt(a) - parseInt(b))

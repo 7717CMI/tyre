@@ -5,6 +5,13 @@
 
 import { DataRecord, FilterState } from './types'
 
+/** Format a number with comma separators */
+function formatWithCommas(value: number, decimals: number = 2): string {
+  const parts = value.toFixed(decimals).split('.')
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return parts.join('.')
+}
+
 export interface Insight {
   id: string
   type: 'growth' | 'leader' | 'trend' | 'comparison' | 'forecast'
@@ -86,22 +93,16 @@ function findTopPerformer(records: DataRecord[], filters: FilterState, currency:
   if (!topKey) return null
   
   // Format value based on currency
+  // Note: Data values are already in the unit specified by metadata (e.g., USD Million)
   let valueDisplay = ''
   if (filters.dataType === 'value') {
     if (currency === 'INR') {
-      // For INR, use Indian number system
-      if (topValue >= 10000000) {
-        valueDisplay = `₹${(topValue / 10000000).toFixed(2)} Cr`
-      } else if (topValue >= 100000) {
-        valueDisplay = `₹${(topValue / 100000).toFixed(2)} L`
-      } else {
-        valueDisplay = `₹${topValue.toFixed(2)}`
-      }
+      valueDisplay = `₹${formatWithCommas(topValue)} Million`
     } else {
-      valueDisplay = `${(topValue / 1000000).toFixed(2)} USD Mn`
+      valueDisplay = `${formatWithCommas(topValue)} USD Million`
     }
   } else {
-    valueDisplay = `${topValue.toFixed(1)} ${volumeUnit}`
+    valueDisplay = `${formatWithCommas(topValue)} ${volumeUnit}`
   }
   
   return {
@@ -169,8 +170,8 @@ function findGrowthLeader(records: DataRecord[], filters: FilterState): Insight 
     id: 'growth-leader',
     type: 'growth',
     title: 'Fastest Growing',
-    description: `${maxGrowthKey} shows ${maxGrowth.toFixed(1)}% growth (${(cagr * 100).toFixed(1)}% CAGR)`,
-    value: `${maxGrowth.toFixed(1)}%`,
+    description: `${maxGrowthKey} shows ${formatWithCommas(maxGrowth, 1)}% growth (${formatWithCommas(cagr * 100, 1)}% CAGR)`,
+    value: `${formatWithCommas(maxGrowth, 1)}%`,
     trend: maxGrowth > 0 ? 'up' : 'down',
     priority: 'high',
     icon: '📈'
@@ -219,8 +220,8 @@ function analyzeTrends(records: DataRecord[], filters: FilterState): Insight | n
     id: 'trend-analysis',
     type: 'trend',
     title: 'Market Trajectory',
-    description: `${trendDescription} with ${overallGrowth.toFixed(1)}% total growth`,
-    value: `${overallGrowth.toFixed(1)}%`,
+    description: `${trendDescription} with ${formatWithCommas(overallGrowth, 1)}% total growth`,
+    value: `${formatWithCommas(overallGrowth, 1)}%`,
     trend,
     priority: 'medium',
     icon: '📊'
@@ -297,8 +298,8 @@ function generateForecast(records: DataRecord[], filters: FilterState): Insight 
     id: 'forecast',
     type: 'forecast',
     title: 'Future Outlook',
-    description: `Market expected to ${projectedGrowth > 0 ? 'grow' : 'decline'} ${Math.abs(projectedGrowth).toFixed(1)}% by ${endYear}`,
-    value: `${projectedGrowth > 0 ? '+' : ''}${projectedGrowth.toFixed(1)}%`,
+    description: `Market expected to ${projectedGrowth > 0 ? 'grow' : 'decline'} ${formatWithCommas(Math.abs(projectedGrowth), 1)}% by ${endYear}`,
+    value: `${projectedGrowth > 0 ? '+' : ''}${formatWithCommas(projectedGrowth, 1)}%`,
     trend: projectedGrowth > 0 ? 'up' : 'down',
     priority: 'medium',
     icon: '🔮'
@@ -335,22 +336,22 @@ function analyzeConcentration(records: DataRecord[], filters: FilterState): Insi
   let priority: 'high' | 'medium' | 'low' = 'medium'
   
   if (concentration > 80) {
-    description = `Highly concentrated - top 20% accounts for ${concentration.toFixed(1)}% of market`
+    description = `Highly concentrated - top 20% accounts for ${formatWithCommas(concentration, 1)}% of market`
     priority = 'high'
   } else if (concentration > 60) {
-    description = `Moderately concentrated - top 20% holds ${concentration.toFixed(1)}% share`
+    description = `Moderately concentrated - top 20% holds ${formatWithCommas(concentration, 1)}% share`
     priority = 'medium'
   } else {
-    description = `Well distributed - top 20% represents ${concentration.toFixed(1)}% of market`
+    description = `Well distributed - top 20% represents ${formatWithCommas(concentration, 1)}% of market`
     priority = 'low'
   }
-  
+
   return {
     id: 'concentration',
     type: 'comparison',
     title: 'Market Concentration',
     description,
-    value: `${concentration.toFixed(1)}%`,
+    value: `${formatWithCommas(concentration, 1)}%`,
     trend: 'stable',
     priority,
     icon: '📍'

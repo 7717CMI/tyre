@@ -20,7 +20,8 @@ export interface Metadata {
 export interface GeographyDimension {
   global: string[];
   regions: string[];
-  countries: Record<string, string[]>;
+  sub_regions: Record<string, string[]>; // region -> sub-regions (e.g., "Europe" -> ["Western Europe", "Southern Europe", ...])
+  countries: Record<string, string[]>; // region or sub-region -> countries (e.g., "Western Europe" -> ["Germany", "France", ...])
   all_geographies: string[];
 }
 

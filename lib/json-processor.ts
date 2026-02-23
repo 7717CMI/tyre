@@ -1133,14 +1133,27 @@ async function processSegmentTypeAsync(
       })
       
       // Parse CAGR - it might be a string like "5.2%" or a number
+      // If not provided in data, calculate from time series
       let cagr = 0
       if (data.CAGR !== null && data.CAGR !== undefined) {
         if (typeof data.CAGR === 'string') {
-          // Extract number from string like "5.2%" or "5.2"
           const cagrStr = data.CAGR.replace('%', '').trim()
           cagr = parseFloat(cagrStr) || 0
         } else if (typeof data.CAGR === 'number') {
           cagr = data.CAGR
+        }
+      } else {
+        // Calculate CAGR from time series if not provided
+        const sortedYears = allYears.slice().sort((a, b) => a - b)
+        if (sortedYears.length >= 2) {
+          const firstYear = sortedYears[0]
+          const lastYear = sortedYears[sortedYears.length - 1]
+          const firstVal = timeSeries[firstYear]
+          const lastVal = timeSeries[lastYear]
+          const nYears = lastYear - firstYear
+          if (firstVal > 0 && lastVal > 0 && nYears > 0) {
+            cagr = (Math.pow(lastVal / firstVal, 1 / nYears) - 1) * 100
+          }
         }
       }
       
@@ -1245,16 +1258,19 @@ export async function processJsonDataAsync(
       throw new Error('No geographies found in any data source. Please check your JSON structure.')
     }
 
-    // Extract regions from "By Region" segment type as additional geographies
-    // This allows filtering by region (Middle East, Latin America, etc.) in the geography dropdown
+    // Extract regions, sub-regions, and countries from "By Region" segment type
+    // This builds a full geography hierarchy for the geography dropdown
     const regionGeographies: string[] = []
+    const extractedRegions: string[] = []
+    const extractedSubRegions: Record<string, string[]> = {}
+    const extractedCountries: Record<string, string[]> = {}
+
     for (const topGeo of geographies) {
       const geoData = structureData[topGeo]
       if (geoData && typeof geoData === 'object') {
-        // Look for "By Region" segment type
         const byRegionData = geoData['By Region']
         if (byRegionData && typeof byRegionData === 'object') {
-          // Extract region names (first level keys under "By Region")
+          // Level 1: Extract region names (e.g., North America, Europe, Asia)
           const regions = Object.keys(byRegionData).filter(key => {
             const value = byRegionData[key]
             return value && typeof value === 'object' && !Array.isArray(value)
@@ -1263,20 +1279,78 @@ export async function processJsonDataAsync(
             if (!regionGeographies.includes(region) && !geographies.includes(region)) {
               regionGeographies.push(region)
             }
+            if (!extractedRegions.includes(region)) {
+              extractedRegions.push(region)
+            }
+
+            // Level 2: Extract sub-regions or countries under each region
+            const regionContent = byRegionData[region]
+            if (regionContent && typeof regionContent === 'object') {
+              const childKeys = Object.keys(regionContent).filter(key => {
+                return !/^\d{4}$/.test(key) && key !== 'CAGR' && key !== '_aggregated' && key !== '_level' && key !== region
+              })
+
+              childKeys.forEach(child => {
+                const childContent = regionContent[child]
+                if (childContent && typeof childContent === 'object') {
+                  // Check if this child has its own object children (making it a sub-region)
+                  const grandchildKeys = Object.keys(childContent).filter(key => {
+                    if (/^\d{4}$/.test(key) || key === 'CAGR' || key === '_aggregated' || key === '_level' || key === child) return false
+                    const val = childContent[key]
+                    return val && typeof val === 'object' && !Array.isArray(val)
+                  })
+
+                  if (grandchildKeys.length > 0) {
+                    // This is a sub-region (e.g., "Western Europe" with countries underneath)
+                    if (!extractedSubRegions[region]) extractedSubRegions[region] = []
+                    if (!extractedSubRegions[region].includes(child)) {
+                      extractedSubRegions[region].push(child)
+                    }
+                    // Add sub-region to geographies list
+                    if (!regionGeographies.includes(child)) {
+                      regionGeographies.push(child)
+                    }
+
+                    // Level 3: Extract countries under sub-region
+                    if (!extractedCountries[child]) extractedCountries[child] = []
+                    grandchildKeys.forEach(country => {
+                      if (!extractedCountries[child].includes(country)) {
+                        extractedCountries[child].push(country)
+                      }
+                      if (!regionGeographies.includes(country)) {
+                        regionGeographies.push(country)
+                      }
+                    })
+                  } else {
+                    // This is a direct country under the region (e.g., "USA" under "North America")
+                    if (!extractedCountries[region]) extractedCountries[region] = []
+                    if (!extractedCountries[region].includes(child)) {
+                      extractedCountries[region].push(child)
+                    }
+                    if (!regionGeographies.includes(child)) {
+                      regionGeographies.push(child)
+                    }
+                  }
+                }
+              })
+            }
           })
         }
       }
     }
 
-    // Add regions to geographies list
+    // Add all extracted geographies to the list
     if (regionGeographies.length > 0) {
-      console.log(`Found ${regionGeographies.length} regions from "By Region":`, regionGeographies)
+      console.log(`Found ${regionGeographies.length} geographies from "By Region":`, regionGeographies)
       geographies = [...geographies, ...regionGeographies]
     }
 
     console.log(`Found ${geographies.length} total geographies:`, geographies)
+    console.log(`Regions:`, extractedRegions)
+    console.log(`Sub-regions:`, extractedSubRegions)
+    console.log(`Countries:`, extractedCountries)
     const geographySet = new Set(geographies)
-    
+
     // Extract segment types from segmentation data (second level keys)
     console.log('Extracting segment types from segmentation data...')
     const segmentTypes = new Set<string>()
@@ -1291,16 +1365,18 @@ export async function processJsonDataAsync(
       throw new Error('No segment types found in segmentation data')
     }
     console.log(`Found ${segmentTypes.size} segment types:`, Array.from(segmentTypes))
-    
-    // Build geography dimension - truly dynamic, no assumptions about structure
-    // All geographies go into all_geographies, regardless of whether they're global, regions, or countries
+
+    // Build geography dimension with full hierarchy support
+    // Filter out "Global" from all_geographies since geography selector should show regions/countries only
+    const selectableGeographies = geographies.filter(g => g !== 'Global')
     const geographyDimension: GeographyDimension = {
-      global: geographies.length === 1 ? geographies : [], // If only one geography, treat as global
-      regions: [], // Will be populated dynamically if needed
-      countries: {}, // Will be populated dynamically if needed
-      all_geographies: geographies // All geographies from the data
+      global: geographies.filter(g => g === 'Global'),
+      regions: extractedRegions,
+      sub_regions: extractedSubRegions,
+      countries: extractedCountries,
+      all_geographies: selectableGeographies // Exclude "Global" from selectable geographies
     }
-    
+
     console.log(`Geography dimension built with ${geographies.length} geographies:`, geographies)
     
     // Process each segment type asynchronously
@@ -1367,7 +1443,7 @@ export async function processJsonDataAsync(
     
     // Build metadata
     const metadata: Metadata = {
-      market_name: 'Solar Micro Inverter Market',
+      market_name: 'Asia and North America Truck And Bus Radial (TBR) Tyre Market',
       market_type: 'Market Analysis',
       industry: 'Chemicals & Materials',
       years: allYears,

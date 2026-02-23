@@ -88,8 +88,8 @@ function getDefaultFilters(data: ComparisonData | null): FilterState {
   const baseYear = data.metadata.base_year
   const forecastYear = data.metadata.forecast_year
   
-  // Get first geography for default view
-  const firstGeography = data.dimensions.geographies.all_geographies?.[0] || ''
+  // Get first geography for default view (prefer first region over Global)
+  const firstGeography = data.dimensions.geographies.regions?.[0] || data.dimensions.geographies.all_geographies?.[0] || ''
   
   // Get first few segments from the first segment type (for default view)
   const segmentDimension = data.dimensions.segments[firstSegmentType]
@@ -135,8 +135,8 @@ function getDefaultOpportunityFilters(data: ComparisonData | null): FilterState 
   const baseYear = data.metadata.base_year
   const forecastYear = data.metadata.forecast_year
   
-  // For opportunity matrix, default to first geography (usually India or global)
-  const firstGeography = data.dimensions.geographies.all_geographies?.[0] || ''
+  // For opportunity matrix, default to first region
+  const firstGeography = data.dimensions.geographies.regions?.[0] || data.dimensions.geographies.all_geographies?.[0] || ''
   
   // For opportunity matrix, don't pre-select segments - let user select them
   // This avoids issues where segments don't match the actual data structure

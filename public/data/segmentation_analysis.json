@@ -1,43 +1,109 @@
 {
   "Global": {
-    "By Technology": {},
-    "By Power Rating": {},
-    "By Provider": {},
-    "By End User": {},
+    "By Product Type": {},
+    "By Rim Diameter Class": {},
+    "By Sales Channel": {
+      "OEM": {},
+      "Aftermarket": {
+        "Fleet / Institutional Buyers": {},
+        "Independent Operators / Retail Buyers": {}
+      }
+    },
+    "By Vehicle Type": {},
     "By Region": {
       "North America": {
-        "U.S.": {},
+        "USA": {},
         "Canada": {}
       },
       "Europe": {
-        "Germany": {},
-        "U.K.": {},
-        "Italy": {},
-        "France": {},
-        "Spain": {},
-        "Russia": {},
-        "Rest of Europe": {}
+        "Western Europe": {
+          "Germany": {},
+          "France": {},
+          "Belgium": {},
+          "Netherlands": {},
+          "UK": {},
+          "Ireland": {}
+        },
+        "Southern Europe": {
+          "Italy": {},
+          "Spain": {},
+          "Portugal": {},
+          "Greece": {}
+        },
+        "Central Europe": {
+          "Switzerland": {},
+          "Austria": {}
+        },
+        "Nordics": {
+          "Denmark": {},
+          "Sweden": {},
+          "Norway": {},
+          "Finland": {}
+        },
+        "Baltics": {
+          "Estonia": {},
+          "Latvia": {},
+          "Lithuania": {}
+        },
+        "Eastern Europe": {
+          "Poland": {},
+          "Czechia": {},
+          "Slovakia": {},
+          "Hungary": {},
+          "Slovenia": {},
+          "Romania": {},
+          "Bulgaria": {}
+        },
+        "Balkans": {
+          "Albania": {},
+          "Bosnia and Herzegovina": {},
+          "Serbia": {},
+          "Montenegro": {},
+          "North Macedonia": {},
+          "Kosovo": {},
+          "Croatia": {}
+        }
       },
-      "Asia Pacific": {
-        "China": {},
+      "Asia": {
         "Japan": {},
-        "India": {},
-        "South Korea": {},
-        "ASEAN": {},
-        "Australia": {},
-        "Rest of Asia Pacific": {}
-      },
-      "Middle East & Africa": {
-        "GCC": {},
-        "South Africa": {},
-        "Rest of Middle East & Africa": {}
-      },
-      "Latin America": {
-        "Brazil": {},
-        "Argentina": {},
-        "Mexico": {},
-        "Rest of Latin America": {}
+        "China": {}
       }
     }
+  },
+  "North America": {
+    "By Product Type": {},
+    "By Rim Diameter Class": {},
+    "By Sales Channel": {
+      "OEM": {},
+      "Aftermarket": {
+        "Fleet / Institutional Buyers": {},
+        "Independent Operators / Retail Buyers": {}
+      }
+    },
+    "By Vehicle Type": {}
+  },
+  "Europe": {
+    "By Product Type": {},
+    "By Rim Diameter Class": {},
+    "By Sales Channel": {
+      "OEM": {},
+      "Aftermarket": {
+        "Fleet / Institutional Buyers": {},
+        "Independent Operators / Retail Buyers": {}
+      }
+    },
+    "By Vehicle Type": {}
+  },
+  "Asia": {
+    "By Product Type": {},
+    "By Rim Diameter Class": {},
+    "By Sales Channel": {
+      "OEM": {},
+      "Aftermarket": {
+        "Fleet / Institutional Buyers": {},
+        "Independent Operators / Retail Buyers": {}
+      }
+    },
+    "By Vehicle Type": {}
   }
 }

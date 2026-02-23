@@ -9,7 +9,7 @@ import { GeographyMultiSelect } from '@/components/filters/GeographyMultiSelect'
 import { AggregationLevelSelector } from '@/components/filters/AggregationLevelSelector'
 import { CascadeFilter } from '@/components/filters/CascadeFilter'
 import { BusinessTypeFilter } from '@/components/filters/BusinessTypeFilter'
-import { Layers, ChevronDown, X, Tag, Plus } from 'lucide-react'
+import { Layers, ChevronDown, ChevronRight, X, Tag, Plus } from 'lucide-react'
 import type { DataRecord } from '@/lib/types'
 
 // Wrapper components for opportunity matrix filters
@@ -17,8 +17,10 @@ function OpportunityGeographyMultiSelect() {
   const { data, opportunityFilters, updateOpportunityFilters } = useDashboardStore()
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [expandedRegions, setExpandedRegions] = useState<Set<string>>(new Set())
+  const [expandedSubRegions, setExpandedSubRegions] = useState<Set<string>>(new Set())
   const dropdownRef = useRef<HTMLDivElement>(null)
-  
+
   const shouldHide = opportunityFilters.segmentType === 'By Region' || opportunityFilters.segmentType === 'By State'
 
   useEffect(() => {
@@ -35,17 +37,69 @@ function OpportunityGeographyMultiSelect() {
     }
   }, [isOpen])
 
-  const geographyOptions = useMemo(() => {
-    if (!data || !data.dimensions?.geographies) return []
-    const allGeographies = data.dimensions.geographies.all_geographies || []
-    if (!searchTerm) return allGeographies
-    const search = searchTerm.toLowerCase()
-    return allGeographies.filter(geo => geo.toLowerCase().includes(search))
-  }, [data, searchTerm])
+  const geoHierarchy = useMemo(() => {
+    if (!data?.dimensions?.geographies) return { regions: [], sub_regions: {} as Record<string, string[]>, countries: {} as Record<string, string[]> }
+    const geo = data.dimensions.geographies
+    return {
+      regions: geo.regions || [],
+      sub_regions: geo.sub_regions || {},
+      countries: geo.countries || {}
+    }
+  }, [data])
+
+  // Auto-expand when searching
+  useEffect(() => {
+    if (searchTerm) {
+      setExpandedRegions(new Set(geoHierarchy.regions))
+      const allSubs = new Set<string>()
+      Object.values(geoHierarchy.sub_regions).forEach(subs => {
+        subs.forEach(s => allSubs.add(s))
+      })
+      setExpandedSubRegions(allSubs)
+    }
+  }, [searchTerm, geoHierarchy])
 
   if (shouldHide) return null
 
+  const matchesSearch = (name: string) => !searchTerm || name.toLowerCase().includes(searchTerm.toLowerCase())
+  const hasSearchMatch = (parentKey: string): boolean => {
+    if (!searchTerm) return true
+    if (matchesSearch(parentKey)) return true
+    const subRegions = geoHierarchy.sub_regions[parentKey] || []
+    for (const sr of subRegions) {
+      if (matchesSearch(sr)) return true
+      if ((geoHierarchy.countries[sr] || []).some(c => matchesSearch(c))) return true
+    }
+    if ((geoHierarchy.countries[parentKey] || []).some(c => matchesSearch(c))) return true
+    return false
+  }
+
+  const handleToggle = (geo: string) => {
+    const current = opportunityFilters.geographies
+    const updated = current.includes(geo) ? current.filter(g => g !== geo) : [...current, geo]
+    updateOpportunityFilters({ geographies: updated })
+  }
+
+  const toggleExpand = (key: string, level: 'region' | 'subRegion') => {
+    if (level === 'region') {
+      setExpandedRegions(prev => { const next = new Set(prev); if (next.has(key)) next.delete(key); else next.add(key); return next })
+    } else {
+      setExpandedSubRegions(prev => { const next = new Set(prev); if (next.has(key)) next.delete(key); else next.add(key); return next })
+    }
+  }
+
   const selectedCount = opportunityFilters.geographies.length
+  const hasHierarchy = geoHierarchy.regions.length > 0
+
+  const renderCheckbox = (name: string, indent: number) => {
+    if (searchTerm && !matchesSearch(name)) return null
+    return (
+      <label key={name} className="flex items-center py-1 hover:bg-gray-50 cursor-pointer" style={{ paddingLeft: `${indent * 16 + 8}px`, paddingRight: '8px' }}>
+        <input type="checkbox" checked={opportunityFilters.geographies.includes(name)} onChange={() => handleToggle(name)} className="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+        <span className="text-sm text-black">{name}</span>
+      </label>
+    )
+  }
 
   return (
     <div ref={dropdownRef} className="relative">
@@ -59,9 +113,9 @@ function OpportunityGeographyMultiSelect() {
         </span>
         <ChevronDown className={`h-4 w-4 text-black transition-transform ${isOpen ? 'transform rotate-180' : ''}`} />
       </button>
-      
+
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-hidden">
           <div className="p-2 border-b border-gray-200">
             <input
               type="text"
@@ -71,27 +125,60 @@ function OpportunityGeographyMultiSelect() {
               className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
             />
           </div>
-          <div className="p-2 space-y-1">
-            {geographyOptions.map(geo => {
-              const isSelected = opportunityFilters.geographies.includes(geo)
-              return (
-                <label key={geo} className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={(e) => {
-                      const current = opportunityFilters.geographies
-                      const updated = e.target.checked
-                        ? [...current, geo]
-                        : current.filter(g => g !== geo)
-                      updateOpportunityFilters({ geographies: updated })
-                    }}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-black">{geo}</span>
-                </label>
-              )
-            })}
+          <div className="overflow-y-auto max-h-48">
+            {hasHierarchy ? (
+              geoHierarchy.regions.map(region => {
+                if (!hasSearchMatch(region)) return null
+                const isExpanded = expandedRegions.has(region)
+                const subRegions = geoHierarchy.sub_regions[region] || []
+                const directCountries = geoHierarchy.countries[region] || []
+                const hasChildren = subRegions.length > 0 || directCountries.length > 0
+
+                return (
+                  <div key={region}>
+                    <div className="flex items-center py-1 hover:bg-gray-50" style={{ paddingLeft: '8px', paddingRight: '8px' }}>
+                      {hasChildren ? (
+                        <button onClick={() => toggleExpand(region, 'region')} className="p-0.5 hover:bg-gray-200 rounded mr-1">
+                          {isExpanded ? <ChevronDown className="h-3.5 w-3.5 text-gray-500" /> : <ChevronRight className="h-3.5 w-3.5 text-gray-500" />}
+                        </button>
+                      ) : <span className="w-5" />}
+                      <label className="flex items-center cursor-pointer flex-1">
+                        <input type="checkbox" checked={opportunityFilters.geographies.includes(region)} onChange={() => handleToggle(region)} className="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                        <span className="text-sm font-medium text-black">{region}</span>
+                      </label>
+                    </div>
+                    {isExpanded && (
+                      <>
+                        {subRegions.map(subRegion => {
+                          if (!hasSearchMatch(subRegion) && !matchesSearch(subRegion)) return null
+                          const isSubExpanded = expandedSubRegions.has(subRegion)
+                          const countries = geoHierarchy.countries[subRegion] || []
+                          return (
+                            <div key={subRegion}>
+                              <div className="flex items-center py-1 hover:bg-gray-50" style={{ paddingLeft: '28px', paddingRight: '8px' }}>
+                                {countries.length > 0 ? (
+                                  <button onClick={() => toggleExpand(subRegion, 'subRegion')} className="p-0.5 hover:bg-gray-200 rounded mr-1">
+                                    {isSubExpanded ? <ChevronDown className="h-3.5 w-3.5 text-gray-500" /> : <ChevronRight className="h-3.5 w-3.5 text-gray-500" />}
+                                  </button>
+                                ) : <span className="w-5" />}
+                                <label className="flex items-center cursor-pointer flex-1">
+                                  <input type="checkbox" checked={opportunityFilters.geographies.includes(subRegion)} onChange={() => handleToggle(subRegion)} className="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                                  <span className="text-sm text-gray-800">{subRegion}</span>
+                                </label>
+                              </div>
+                              {isSubExpanded && countries.map(country => renderCheckbox(country, 4))}
+                            </div>
+                          )
+                        })}
+                        {directCountries.map(country => renderCheckbox(country, 2))}
+                      </>
+                    )}
+                  </div>
+                )
+              })
+            ) : (
+              (data?.dimensions?.geographies?.all_geographies || []).map(geo => renderCheckbox(geo, 0))
+            )}
           </div>
         </div>
       )}

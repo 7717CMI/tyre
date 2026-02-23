@@ -1443,7 +1443,7 @@ export async function processJsonDataAsync(
     
     // Build metadata
     const metadata: Metadata = {
-      market_name: 'Asia and Europe Truck And Bus Radial (TBR) Tyre Market',
+      market_name: ', Europe, Asia Truck And Bus Radial (TBR) Tyre Market',
       market_type: 'Market Analysis',
       industry: 'Chemicals & Materials',
       years: allYears,

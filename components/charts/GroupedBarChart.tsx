@@ -196,15 +196,7 @@ export function GroupedBarChart({ title, height = 400 }: GroupedBarChartProps) {
         })
       } else if (filters.viewMode === 'geography-mode') {
         // Primary: geographies (bar groups), Secondary: segments (stacks)
-        // Use selected geographies instead of record geographies when Global data is used as fallback
-        const regionalGeographies = ['North America', 'Europe', 'Asia Pacific', 'Latin America', 'Middle East', 'Africa', 'Middle East & Africa', 'ASEAN', 'SAARC Region', 'CIS Region']
-        const hasRegionalSelection = filters.geographies.some(g => regionalGeographies.includes(g))
-        const hasOnlyGlobalRecords = filtered.every(r => r.geography === 'Global')
-
-        // If user selected regional geographies but we only have Global records, use selected geographies
-        const uniqueGeographies = (hasRegionalSelection && hasOnlyGlobalRecords && !filters.geographies.includes('Global'))
-          ? filters.geographies.filter(g => regionalGeographies.includes(g))
-          : getUniqueGeographies(filtered)
+        const uniqueGeographies = getUniqueGeographies(filtered)
         const uniqueSegments = getUniqueSegments(filtered)
 
         stackedSeries = {
@@ -246,14 +238,8 @@ export function GroupedBarChart({ title, height = 400 }: GroupedBarChartProps) {
         // For segment mode with Level 2 aggregation, extract keys from prepared data
         series = extractSeriesFromPreparedData()
       } else {
-        // Geography mode - use selected geographies when Global data is used as fallback
-        const regionalGeographies = ['North America', 'Europe', 'Asia Pacific', 'Latin America', 'Middle East', 'Africa', 'Middle East & Africa', 'ASEAN', 'SAARC Region', 'CIS Region']
-        const hasRegionalSelection = filters.geographies.some(g => regionalGeographies.includes(g))
-        const hasOnlyGlobalRecords = filtered.every(r => r.geography === 'Global')
-
-        series = (hasRegionalSelection && hasOnlyGlobalRecords && !filters.geographies.includes('Global'))
-          ? filters.geographies.filter(g => regionalGeographies.includes(g))
-          : getUniqueGeographies(filtered)
+        // Geography mode - use actual geographies from filtered data
+        series = getUniqueGeographies(filtered)
       }
     }
 

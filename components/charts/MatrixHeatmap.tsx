@@ -24,20 +24,9 @@ export function MatrixHeatmap({ title, height = 600 }: MatrixHeatmapProps) {
     // Filter data
     const filtered = filterData(dataset, filters)
 
-    // Check if we need Global-to-regional mapping
-    const regionalGeographies = ['North America', 'Europe', 'Asia Pacific', 'Latin America', 'Middle East', 'Africa', 'Middle East & Africa', 'ASEAN', 'SAARC Region', 'CIS Region']
-    const hasRegionalSelection = filters.geographies.some(g => regionalGeographies.includes(g))
-    const hasOnlyGlobalRecords = filtered.every(r => r.geography === 'Global')
-    const needsGlobalMapping = hasRegionalSelection && hasOnlyGlobalRecords && !filters.geographies.includes('Global')
-
-    // Get unique geographies - use selected geographies if we need Global mapping
+    // Get unique geographies from filtered data (Global is excluded in filterData)
     let uniqueGeos: string[]
-    if (needsGlobalMapping) {
-      // Use selected regional geographies instead of Global
-      uniqueGeos = filters.geographies.filter(g => regionalGeographies.includes(g))
-    } else {
-      uniqueGeos = [...new Set(filtered.map(r => r.geography).filter(g => g && typeof g === 'string' && g.trim() !== ''))]
-    }
+    uniqueGeos = [...new Set(filtered.map(r => r.geography).filter(g => g && typeof g === 'string' && g.trim() !== ''))]
 
     // Get unique segments - filter out empty/undefined values
     const uniqueSegs = [...new Set(filtered.map(r => r.segment).filter(s => s && typeof s === 'string' && s.trim() !== '' && s !== '__ALL_SEGMENTS__'))]
@@ -65,25 +54,6 @@ export function MatrixHeatmap({ title, height = 600 }: MatrixHeatmapProps) {
       })
     })
 
-    // Realistic regional market share distribution for Global data mapping
-    const regionalMarketShares: Record<string, number> = {
-      'North America': 0.32,
-      'Europe': 0.28,
-      'Asia Pacific': 0.25,
-      'Latin America': 0.08,
-      'Middle East': 0.04,
-      'Africa': 0.03,
-      'Middle East & Africa': 0.07,
-      'ASEAN': 0.10,
-      'SAARC Region': 0.08,
-      'CIS Region': 0.05
-    }
-
-    // Calculate sum of market shares for selected regions
-    const selectedShareSum = geographies.reduce((sum, geo) =>
-      sum + (regionalMarketShares[geo] || 0.1), 0
-    )
-
     // Build matrix: rows = geography-year combinations, columns = segments
     const matrix: number[][] = []
     let maxValue = 0
@@ -94,20 +64,9 @@ export function MatrixHeatmap({ title, height = 600 }: MatrixHeatmapProps) {
       segments.forEach((seg, segIndex) => {
         let value = 0
 
-        if (needsGlobalMapping) {
-          // Find Global record and apply proportional distribution
-          const globalRecord = filtered.find(r => r.geography === 'Global' && r.segment === seg)
-          if (globalRecord) {
-            const globalValue = globalRecord.time_series[geoYear.year] || 0
-            const regionShare = regionalMarketShares[geoYear.geography] || 0.1
-            const normalizedShare = regionShare / selectedShareSum
-            value = globalValue * normalizedShare
-          }
-        } else {
-          // Direct lookup for non-Global data
-          const record = filtered.find(r => r.geography === geoYear.geography && r.segment === seg)
-          value = record?.time_series[geoYear.year] || 0
-        }
+        // Direct lookup - Global records are excluded in filterData, country distribution handled there too
+        const record = filtered.find(r => r.geography === geoYear.geography && r.segment === seg)
+        value = record?.time_series[geoYear.year] || 0
 
         matrix[rowIndex][segIndex] = value
         maxValue = Math.max(maxValue, value)

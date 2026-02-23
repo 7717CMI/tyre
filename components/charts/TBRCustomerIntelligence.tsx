@@ -43,42 +43,42 @@ const brandProductData: BrandProductRow[] = [
   { countryName: 'Germany', brandType: 'A-Tier (Premium Brands)', brandName: 'Bridgestone', tbrTireType: 'Duravis R-Trailer 002', rimDiameterClass: '24.5 inches and above', b2b2023: '€460', b2b2024: '€475', b2b2025: '€490', retail2023: '€530', retail2024: '€545', retail2025: '€565', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
 
   // Tier (Mid-Range Brands) - Brand-1: Hankook
-  { countryName: 'Germany', brandType: 'Tier (Mid-Range Brands)', brandName: 'Hankook', tbrTireType: 'SmartFlex AH31', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€310', b2b2024: '€320', b2b2025: '€330', retail2023: '€360', retail2024: '€370', retail2025: '€385', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Mid-Range Brands)', brandName: 'Hankook', tbrTireType: 'SmartFlex DH31', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€320', b2b2024: '€330', b2b2025: '€340', retail2023: '€370', retail2024: '€380', retail2025: '€395', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Mid-Range Brands)', brandName: 'Hankook', tbrTireType: 'SmartWork DM09', rimDiameterClass: '20–22.5 inches', b2b2023: '€345', b2b2024: '€355', b2b2025: '€370', retail2023: '€400', retail2024: '€410', retail2025: '€425', oemBusiness2025: 'US$165M', aftermarket2025: 'US$120M', marketShare2025: '10.8%' },
-  { countryName: 'Germany', brandType: 'Tier (Mid-Range Brands)', brandName: 'Hankook', tbrTireType: 'SmartWork AM09', rimDiameterClass: '20–22.5 inches', b2b2023: '€355', b2b2024: '€365', b2b2025: '€380', retail2023: '€410', retail2024: '€420', retail2025: '€435', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Mid-Range Brands)', brandName: 'Hankook', tbrTireType: 'SmartFlex TH31', rimDiameterClass: '24.5 inches and above', b2b2023: '€380', b2b2024: '€390', b2b2025: '€405', retail2023: '€440', retail2024: '€450', retail2025: '€465', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Mid-Range Brands)', brandName: 'Hankook', tbrTireType: 'SmartControl AW02', rimDiameterClass: '24.5 inches and above', b2b2023: '€395', b2b2024: '€405', b2b2025: '€420', retail2023: '€455', retail2024: '€465', retail2025: '€480', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'B Tier (Mid-Range Brands)', brandName: 'Hankook', tbrTireType: 'SmartFlex AH31', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€310', b2b2024: '€320', b2b2025: '€330', retail2023: '€360', retail2024: '€370', retail2025: '€385', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'B Tier (Mid-Range Brands)', brandName: 'Hankook', tbrTireType: 'SmartFlex DH31', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€320', b2b2024: '€330', b2b2025: '€340', retail2023: '€370', retail2024: '€380', retail2025: '€395', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'B Tier (Mid-Range Brands)', brandName: 'Hankook', tbrTireType: 'SmartWork DM09', rimDiameterClass: '20–22.5 inches', b2b2023: '€345', b2b2024: '€355', b2b2025: '€370', retail2023: '€400', retail2024: '€410', retail2025: '€425', oemBusiness2025: 'US$165M', aftermarket2025: 'US$120M', marketShare2025: '10.8%' },
+  { countryName: 'Germany', brandType: 'B Tier (Mid-Range Brands)', brandName: 'Hankook', tbrTireType: 'SmartWork AM09', rimDiameterClass: '20–22.5 inches', b2b2023: '€355', b2b2024: '€365', b2b2025: '€380', retail2023: '€410', retail2024: '€420', retail2025: '€435', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'B Tier (Mid-Range Brands)', brandName: 'Hankook', tbrTireType: 'SmartFlex TH31', rimDiameterClass: '24.5 inches and above', b2b2023: '€380', b2b2024: '€390', b2b2025: '€405', retail2023: '€440', retail2024: '€450', retail2025: '€465', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'B Tier (Mid-Range Brands)', brandName: 'Hankook', tbrTireType: 'SmartControl AW02', rimDiameterClass: '24.5 inches and above', b2b2023: '€395', b2b2024: '€405', b2b2025: '€420', retail2023: '€455', retail2024: '€465', retail2025: '€480', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
   // Tier (Mid-Range) - Brand-2: Prometeon (Pirelli)
-  { countryName: 'Germany', brandType: 'Tier (Mid-Range Brands)', brandName: 'Prometeon', tbrTireType: 'Itineris S90', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€305', b2b2024: '€315', b2b2025: '€325', retail2023: '€355', retail2024: '€365', retail2025: '€375', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Mid-Range Brands)', brandName: 'Prometeon', tbrTireType: 'Itineris D90', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€315', b2b2024: '€325', b2b2025: '€335', retail2023: '€365', retail2024: '€375', retail2025: '€385', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Mid-Range Brands)', brandName: 'Prometeon', tbrTireType: 'Itineris T90', rimDiameterClass: '20–22.5 inches', b2b2023: '€340', b2b2024: '€350', b2b2025: '€365', retail2023: '€395', retail2024: '€405', retail2025: '€420', oemBusiness2025: 'US$125M', aftermarket2025: 'US$90M', marketShare2025: '8.2%' },
-  { countryName: 'Germany', brandType: 'Tier (Mid-Range Brands)', brandName: 'Prometeon', tbrTireType: 'FR:01 II', rimDiameterClass: '20–22.5 inches', b2b2023: '€350', b2b2024: '€360', b2b2025: '€375', retail2023: '€405', retail2024: '€415', retail2025: '€430', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Mid-Range Brands)', brandName: 'Prometeon', tbrTireType: 'TR:01 II', rimDiameterClass: '24.5 inches and above', b2b2023: '€370', b2b2024: '€380', b2b2025: '€395', retail2023: '€430', retail2024: '€440', retail2025: '€455', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'C Tier (Mid-Range Brands)', brandName: 'Prometeon', tbrTireType: 'Itineris S90', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€305', b2b2024: '€315', b2b2025: '€325', retail2023: '€355', retail2024: '€365', retail2025: '€375', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'C Tier (Mid-Range Brands)', brandName: 'Prometeon', tbrTireType: 'Itineris D90', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€315', b2b2024: '€325', b2b2025: '€335', retail2023: '€365', retail2024: '€375', retail2025: '€385', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'C Tier (Mid-Range Brands)', brandName: 'Prometeon', tbrTireType: 'Itineris T90', rimDiameterClass: '20–22.5 inches', b2b2023: '€340', b2b2024: '€350', b2b2025: '€365', retail2023: '€395', retail2024: '€405', retail2025: '€420', oemBusiness2025: 'US$125M', aftermarket2025: 'US$90M', marketShare2025: '8.2%' },
+  { countryName: 'Germany', brandType: 'C Tier (Mid-Range Brands)', brandName: 'Prometeon', tbrTireType: 'FR:01 II', rimDiameterClass: '20–22.5 inches', b2b2023: '€350', b2b2024: '€360', b2b2025: '€375', retail2023: '€405', retail2024: '€415', retail2025: '€430', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'C Tier (Mid-Range Brands)', brandName: 'Prometeon', tbrTireType: 'TR:01 II', rimDiameterClass: '24.5 inches and above', b2b2023: '€370', b2b2024: '€380', b2b2025: '€395', retail2023: '€430', retail2024: '€440', retail2025: '€455', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
   // Tier (Mid-Range) - Brand-N: Yokohama
-  { countryName: 'Germany', brandType: 'Tier (Mid-Range Brands)', brandName: 'Yokohama', tbrTireType: 'BluEarth 711L', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€295', b2b2024: '€305', b2b2025: '€315', retail2023: '€345', retail2024: '€355', retail2025: '€365', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Mid-Range Brands)', brandName: 'Yokohama', tbrTireType: '104ZR', rimDiameterClass: '20–22.5 inches', b2b2023: '€330', b2b2024: '€340', b2b2025: '€350', retail2023: '€380', retail2024: '€390', retail2025: '€405', oemBusiness2025: 'US$95M', aftermarket2025: 'US$72M', marketShare2025: '6.4%' },
-  { countryName: 'Germany', brandType: 'Tier (Mid-Range Brands)', brandName: 'Yokohama', tbrTireType: 'TY517 MC2', rimDiameterClass: '24.5 inches and above', b2b2023: '€360', b2b2024: '€370', b2b2025: '€385', retail2023: '€415', retail2024: '€425', retail2025: '€440', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Mid-Range Brands)', brandName: 'Yokohama', tbrTireType: 'BluEarth 711L', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€295', b2b2024: '€305', b2b2025: '€315', retail2023: '€345', retail2024: '€355', retail2025: '€365', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Mid-Range Brands)', brandName: 'Yokohama', tbrTireType: '104ZR', rimDiameterClass: '20–22.5 inches', b2b2023: '€330', b2b2024: '€340', b2b2025: '€350', retail2023: '€380', retail2024: '€390', retail2025: '€405', oemBusiness2025: 'US$95M', aftermarket2025: 'US$72M', marketShare2025: '6.4%' },
+  { countryName: 'Germany', brandType: 'N Tier (Mid-Range Brands)', brandName: 'Yokohama', tbrTireType: 'TY517 MC2', rimDiameterClass: '24.5 inches and above', b2b2023: '€360', b2b2024: '€370', b2b2025: '€385', retail2023: '€415', retail2024: '€425', retail2025: '€440', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
 
   // Tier (Economy Brands) - Brand-1: Giti
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Giti', tbrTireType: 'GSR225', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€240', b2b2024: '€248', b2b2025: '€255', retail2023: '€280', retail2024: '€290', retail2025: '€298', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Giti', tbrTireType: 'GDR655', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€248', b2b2024: '€255', b2b2025: '€265', retail2023: '€288', retail2024: '€298', retail2025: '€308', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Giti', tbrTireType: 'GDR665', rimDiameterClass: '20–22.5 inches', b2b2023: '€270', b2b2024: '€280', b2b2025: '€290', retail2023: '€315', retail2024: '€325', retail2025: '€335', oemBusiness2025: 'US$55M', aftermarket2025: 'US$48M', marketShare2025: '3.9%' },
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Giti', tbrTireType: 'GAR820', rimDiameterClass: '20–22.5 inches', b2b2023: '€278', b2b2024: '€288', b2b2025: '€298', retail2023: '€325', retail2024: '€335', retail2025: '€345', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Giti', tbrTireType: 'GTR955', rimDiameterClass: '24.5 inches and above', b2b2023: '€295', b2b2024: '€305', b2b2025: '€315', retail2023: '€345', retail2024: '€355', retail2025: '€365', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Giti', tbrTireType: 'GAR820+', rimDiameterClass: '24.5 inches and above', b2b2023: '€305', b2b2024: '€315', b2b2025: '€325', retail2023: '€355', retail2024: '€365', retail2025: '€375', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Giti', tbrTireType: 'GSR225', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€240', b2b2024: '€248', b2b2025: '€255', retail2023: '€280', retail2024: '€290', retail2025: '€298', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Giti', tbrTireType: 'GDR655', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€248', b2b2024: '€255', b2b2025: '€265', retail2023: '€288', retail2024: '€298', retail2025: '€308', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Giti', tbrTireType: 'GDR665', rimDiameterClass: '20–22.5 inches', b2b2023: '€270', b2b2024: '€280', b2b2025: '€290', retail2023: '€315', retail2024: '€325', retail2025: '€335', oemBusiness2025: 'US$55M', aftermarket2025: 'US$48M', marketShare2025: '3.9%' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Giti', tbrTireType: 'GAR820', rimDiameterClass: '20–22.5 inches', b2b2023: '€278', b2b2024: '€288', b2b2025: '€298', retail2023: '€325', retail2024: '€335', retail2025: '€345', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Giti', tbrTireType: 'GTR955', rimDiameterClass: '24.5 inches and above', b2b2023: '€295', b2b2024: '€305', b2b2025: '€315', retail2023: '€345', retail2024: '€355', retail2025: '€365', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Giti', tbrTireType: 'GAR820+', rimDiameterClass: '24.5 inches and above', b2b2023: '€305', b2b2024: '€315', b2b2025: '€325', retail2023: '€355', retail2024: '€365', retail2025: '€375', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
   // Tier (Economy) - Brand-2: Sailun
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Sailun', tbrTireType: 'S637', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€232', b2b2024: '€240', b2b2025: '€248', retail2023: '€270', retail2024: '€280', retail2025: '€288', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Sailun', tbrTireType: 'S753', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€240', b2b2024: '€248', b2b2025: '€258', retail2023: '€278', retail2024: '€288', retail2025: '€298', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Sailun', tbrTireType: 'S825', rimDiameterClass: '20–22.5 inches', b2b2023: '€262', b2b2024: '€272', b2b2025: '€282', retail2023: '€305', retail2024: '€315', retail2025: '€325', oemBusiness2025: 'US$42M', aftermarket2025: 'US$38M', marketShare2025: '3.1%' },
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Sailun', tbrTireType: 'S768', rimDiameterClass: '20–22.5 inches', b2b2023: '€270', b2b2024: '€280', b2b2025: '€290', retail2023: '€315', retail2024: '€325', retail2025: '€335', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Sailun', tbrTireType: 'S696', rimDiameterClass: '24.5 inches and above', b2b2023: '€285', b2b2024: '€295', b2b2025: '€305', retail2023: '€330', retail2024: '€340', retail2025: '€350', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Sailun', tbrTireType: 'S637', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€232', b2b2024: '€240', b2b2025: '€248', retail2023: '€270', retail2024: '€280', retail2025: '€288', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Sailun', tbrTireType: 'S753', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€240', b2b2024: '€248', b2b2025: '€258', retail2023: '€278', retail2024: '€288', retail2025: '€298', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Sailun', tbrTireType: 'S825', rimDiameterClass: '20–22.5 inches', b2b2023: '€262', b2b2024: '€272', b2b2025: '€282', retail2023: '€305', retail2024: '€315', retail2025: '€325', oemBusiness2025: 'US$42M', aftermarket2025: 'US$38M', marketShare2025: '3.1%' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Sailun', tbrTireType: 'S768', rimDiameterClass: '20–22.5 inches', b2b2023: '€270', b2b2024: '€280', b2b2025: '€290', retail2023: '€315', retail2024: '€325', retail2025: '€335', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Sailun', tbrTireType: 'S696', rimDiameterClass: '24.5 inches and above', b2b2023: '€285', b2b2024: '€295', b2b2025: '€305', retail2023: '€330', retail2024: '€340', retail2025: '€350', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
   // Tier (Economy) - Brand-3: Kumho
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Kumho', tbrTireType: 'KRD50', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€252', b2b2024: '€260', b2b2025: '€268', retail2023: '€292', retail2024: '€302', retail2025: '€312', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Kumho', tbrTireType: 'KRS50', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€258', b2b2024: '€268', b2b2025: '€278', retail2023: '€300', retail2024: '€310', retail2025: '€320', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Kumho', tbrTireType: 'KMA12', rimDiameterClass: '20–22.5 inches', b2b2023: '€280', b2b2024: '€290', b2b2025: '€300', retail2023: '€325', retail2024: '€335', retail2025: '€348', oemBusiness2025: 'US$48M', aftermarket2025: 'US$40M', marketShare2025: '3.4%' },
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Kumho', tbrTireType: 'KLD11', rimDiameterClass: '24.5 inches and above', b2b2023: '€300', b2b2024: '€310', b2b2025: '€320', retail2023: '€348', retail2024: '€358', retail2025: '€370', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
-  { countryName: 'Germany', brandType: 'Tier (Economy Brands)', brandName: 'Kumho', tbrTireType: 'KRT68', rimDiameterClass: '24.5 inches and above', b2b2023: '€310', b2b2024: '€320', b2b2025: '€330', retail2023: '€358', retail2024: '€368', retail2025: '€380', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Kumho', tbrTireType: 'KRD50', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€252', b2b2024: '€260', b2b2025: '€268', retail2023: '€292', retail2024: '€302', retail2025: '€312', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Kumho', tbrTireType: 'KRS50', rimDiameterClass: 'Up to 19.5 inches', b2b2023: '€258', b2b2024: '€268', b2b2025: '€278', retail2023: '€300', retail2024: '€310', retail2025: '€320', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Kumho', tbrTireType: 'KMA12', rimDiameterClass: '20–22.5 inches', b2b2023: '€280', b2b2024: '€290', b2b2025: '€300', retail2023: '€325', retail2024: '€335', retail2025: '€348', oemBusiness2025: 'US$48M', aftermarket2025: 'US$40M', marketShare2025: '3.4%' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Kumho', tbrTireType: 'KLD11', rimDiameterClass: '24.5 inches and above', b2b2023: '€300', b2b2024: '€310', b2b2025: '€320', retail2023: '€348', retail2024: '€358', retail2025: '€370', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
+  { countryName: 'Germany', brandType: 'N Tier (Economy Brands)', brandName: 'Kumho', tbrTireType: 'KRT68', rimDiameterClass: '24.5 inches and above', b2b2023: '€310', b2b2024: '€320', b2b2025: '€330', retail2023: '€358', retail2024: '€368', retail2025: '€380', oemBusiness2025: '', aftermarket2025: '', marketShare2025: '' },
 ]
 
 // ============================================================
@@ -168,17 +168,19 @@ export default function TBRCustomerIntelligence({ title, height = 600 }: TBRCust
                   <th colSpan={6} className="bg-yellow-300 border border-gray-300 px-3 py-2 text-center text-sm font-bold text-black">
                     Average Prices US$
                   </th>
-                  <th colSpan={3} rowSpan={1} className="bg-cyan-400 border border-gray-300 px-3 py-2 text-center text-sm font-bold text-black">
+                  <th colSpan={2} className="bg-cyan-400 border border-gray-300 px-3 py-2 text-center text-sm font-bold text-black">
                     Financial Performance
+                  </th>
+                  <th rowSpan={3} className="bg-emerald-400 border border-gray-300 px-3 py-2 text-center text-sm font-bold text-black min-w-[120px]">
+                    Market Share (%), 2025
                   </th>
                 </tr>
                 {/* Second-level header */}
                 <tr>
                   <th colSpan={3} className="bg-yellow-200 border border-gray-300 px-3 py-1.5 text-center text-xs font-semibold text-black">B2B</th>
                   <th colSpan={3} className="bg-yellow-100 border border-gray-300 px-3 py-1.5 text-center text-xs font-semibold text-black">Retail</th>
-                  <th className="bg-cyan-200 border border-gray-300 px-2 py-1.5 text-center text-xs font-semibold text-black min-w-[120px]">OEM Business-2025</th>
-                  <th className="bg-cyan-200 border border-gray-300 px-2 py-1.5 text-center text-xs font-semibold text-black min-w-[120px]">Aftermarket-2025</th>
-                  <th className="bg-cyan-200 border border-gray-300 px-2 py-1.5 text-center text-xs font-semibold text-black min-w-[120px]">Market Share (%), 2025</th>
+                  <th rowSpan={2} className="bg-cyan-200 border border-gray-300 px-2 py-1.5 text-center text-xs font-semibold text-black min-w-[120px]">OEM Business-2025</th>
+                  <th rowSpan={2} className="bg-cyan-200 border border-gray-300 px-2 py-1.5 text-center text-xs font-semibold text-black min-w-[120px]">Aftermarket-2025</th>
                 </tr>
                 {/* Column headers */}
                 <tr className="bg-gray-50">
@@ -193,9 +195,6 @@ export default function TBRCustomerIntelligence({ title, height = 600 }: TBRCust
                   <th className="bg-yellow-50 border border-gray-300 px-3 py-2 text-center text-xs font-semibold text-black min-w-[70px]">2023</th>
                   <th className="bg-yellow-50 border border-gray-300 px-3 py-2 text-center text-xs font-semibold text-black min-w-[70px]">2024</th>
                   <th className="bg-yellow-50 border border-gray-300 px-3 py-2 text-center text-xs font-semibold text-black min-w-[70px]">2025</th>
-                  <th className="bg-cyan-50 border border-gray-300 px-3 py-2 text-center text-xs font-semibold text-black">2025</th>
-                  <th className="bg-cyan-50 border border-gray-300 px-3 py-2 text-center text-xs font-semibold text-black">2025</th>
-                  <th className="bg-cyan-50 border border-gray-300 px-3 py-2 text-center text-xs font-semibold text-black">2025</th>
                 </tr>
               </thead>
               <tbody>
@@ -240,20 +239,23 @@ export default function TBRCustomerIntelligence({ title, height = 600 }: TBRCust
                           <td className="border border-gray-300 px-3 py-2 text-sm text-black text-center">{row.retail2023}</td>
                           <td className="border border-gray-300 px-3 py-2 text-sm text-black text-center">{row.retail2024}</td>
                           <td className="border border-gray-300 px-3 py-2 text-sm text-black text-center">{row.retail2025}</td>
-                          {/* Financial Performance - only on brand level */}
-                          {isFirstRowOfBrand && (
-                            <>
-                              <td rowSpan={bnGroup.rows.length} className="border border-gray-300 px-3 py-2 text-sm text-black text-center font-medium align-middle">
-                                {row.oemBusiness2025 || '—'}
-                              </td>
-                              <td rowSpan={bnGroup.rows.length} className="border border-gray-300 px-3 py-2 text-sm text-black text-center font-medium align-middle">
-                                {row.aftermarket2025 || '—'}
-                              </td>
-                              <td rowSpan={bnGroup.rows.length} className="border border-gray-300 px-3 py-2 text-sm text-black text-center font-medium align-middle">
-                                {row.marketShare2025 || '—'}
-                              </td>
-                            </>
-                          )}
+                          {/* Financial Performance & Market Share - only on brand level */}
+                          {isFirstRowOfBrand && (() => {
+                            const brandFinData = bnGroup.rows.find(r => r.oemBusiness2025 || r.aftermarket2025 || r.marketShare2025) || row
+                            return (
+                              <>
+                                <td rowSpan={bnGroup.rows.length} className="border border-gray-300 px-3 py-2 text-sm text-black text-center font-medium align-middle">
+                                  {brandFinData.oemBusiness2025 || '—'}
+                                </td>
+                                <td rowSpan={bnGroup.rows.length} className="border border-gray-300 px-3 py-2 text-sm text-black text-center font-medium align-middle">
+                                  {brandFinData.aftermarket2025 || '—'}
+                                </td>
+                                <td rowSpan={bnGroup.rows.length} className="border border-gray-300 px-3 py-2 text-sm text-black text-center font-medium align-middle">
+                                  {brandFinData.marketShare2025 || '—'}
+                                </td>
+                              </>
+                            )
+                          })()}
                         </tr>
                       )
                     })

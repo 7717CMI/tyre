@@ -124,55 +124,69 @@ export function filterData(
     })
   }
   
-  const filtered = data.filter((record) => {
-    // 1. Geography filter - enhanced to handle parent-child relationships
-    // In geography mode, when a parent geography is selected (e.g., "North America"),
-    // also include records from child geographies (e.g., "U.S.", "Canada")
+  // Country-to-parent-region mapping for reverse lookups
+  const countryToRegion: Record<string, string> = {
+    'USA': 'North America', 'Canada': 'North America',
+    'Western Europe': 'Europe', 'Southern Europe': 'Europe', 'Central Europe': 'Europe',
+    'Nordics': 'Europe', 'Baltics': 'Europe', 'Eastern Europe': 'Europe', 'Balkans': 'Europe',
+    'Germany': 'Europe', 'France': 'Europe', 'Belgium': 'Europe', 'Netherlands': 'Europe', 'UK': 'Europe', 'Ireland': 'Europe',
+    'Italy': 'Europe', 'Spain': 'Europe', 'Portugal': 'Europe', 'Greece': 'Europe',
+    'Switzerland': 'Europe', 'Austria': 'Europe',
+    'Denmark': 'Europe', 'Sweden': 'Europe', 'Norway': 'Europe', 'Finland': 'Europe',
+    'Estonia': 'Europe', 'Latvia': 'Europe', 'Lithuania': 'Europe',
+    'Poland': 'Europe', 'Czechia': 'Europe', 'Slovakia': 'Europe', 'Hungary': 'Europe',
+    'Slovenia': 'Europe', 'Romania': 'Europe', 'Bulgaria': 'Europe',
+    'Albania': 'Europe', 'Bosnia and Herzegovina': 'Europe', 'Serbia': 'Europe',
+    'Montenegro': 'Europe', 'North Macedonia': 'Europe', 'Kosovo': 'Europe', 'Croatia': 'Europe',
+    'Japan': 'Asia', 'China': 'Asia',
+  }
 
-    // SPECIAL CASE: For regional segment types ("By Region", "By State", "By Country"),
-    // skip the geography filter entirely because:
-    // - "By Region" data exists under regional geographies (North America, Europe, etc.), NOT under Global
-    // - The segments themselves ARE the geographical breakdown (e.g., U.S. under North America > By Region)
-    // - Filtering by geography would incorrectly exclude all records when "Global" is selected
+  const regionToCountries: Record<string, string[]> = {
+    'North America': ['USA', 'Canada'],
+    'Europe': [
+      'Western Europe', 'Southern Europe', 'Central Europe', 'Nordics', 'Baltics', 'Eastern Europe', 'Balkans',
+      'Germany', 'France', 'Belgium', 'Netherlands', 'UK', 'Ireland',
+      'Italy', 'Spain', 'Portugal', 'Greece',
+      'Switzerland', 'Austria',
+      'Denmark', 'Sweden', 'Norway', 'Finland',
+      'Estonia', 'Latvia', 'Lithuania',
+      'Poland', 'Czechia', 'Slovakia', 'Hungary', 'Slovenia', 'Romania', 'Bulgaria',
+      'Albania', 'Bosnia and Herzegovina', 'Serbia', 'Montenegro', 'North Macedonia', 'Kosovo', 'Croatia'
+    ],
+    'Western Europe': ['Germany', 'France', 'Belgium', 'Netherlands', 'UK', 'Ireland'],
+    'Southern Europe': ['Italy', 'Spain', 'Portugal', 'Greece'],
+    'Central Europe': ['Switzerland', 'Austria'],
+    'Nordics': ['Denmark', 'Sweden', 'Norway', 'Finland'],
+    'Baltics': ['Estonia', 'Latvia', 'Lithuania'],
+    'Eastern Europe': ['Poland', 'Czechia', 'Slovakia', 'Hungary', 'Slovenia', 'Romania', 'Bulgaria'],
+    'Balkans': ['Albania', 'Bosnia and Herzegovina', 'Serbia', 'Montenegro', 'North Macedonia', 'Kosovo', 'Croatia'],
+    'Asia': ['Japan', 'China']
+  }
+
+  // Identify which selected geographies are countries (have a parent region)
+  const selectedCountries = filters.geographies.filter(g => g in countryToRegion)
+  // Identify parent regions needed for those countries
+  const parentRegionsNeeded = new Set(selectedCountries.map(c => countryToRegion[c]))
+
+  const filtered = data.filter((record) => {
+    // ALWAYS exclude Global records - Global should never appear in charts
+    if (record.geography === 'Global' && !filters.geographies.includes('Global')) {
+      return false
+    }
+
+    // 1. Geography filter
+    // For regional segment types, skip geography filter (segments ARE the geography breakdown)
     let geoMatch = filters.geographies.length === 0 ||
       filters.geographies.includes(record.geography) ||
-      isRegionalSegmentType // Skip geography filter for regional segment types
+      isRegionalSegmentType
 
     // Also match if the record's parent geography is in the selected list
-    // This allows selecting "North America" to include U.S., Canada records
     if (!geoMatch && record.parent_geography && filters.geographies.includes(record.parent_geography)) {
       geoMatch = true
     }
 
-    // In ALL view modes, if no records match the selected geographies for this segment type,
-    // we should include Global data as a fallback (handled later in aggregation)
-    // This is critical for segment-mode when data only exists under "Global" but user selects regional geographies
     if (!geoMatch) {
-      // Check if any selected geography is a parent of this record's geography
-      // Regions contain countries - map them accordingly
-      const regionToCountries: Record<string, string[]> = {
-        'North America': ['USA', 'Canada'],
-        'Europe': [
-          'Western Europe', 'Southern Europe', 'Central Europe', 'Nordics', 'Baltics', 'Eastern Europe', 'Balkans',
-          'Germany', 'France', 'Belgium', 'Netherlands', 'UK', 'Ireland',
-          'Italy', 'Spain', 'Portugal', 'Greece',
-          'Switzerland', 'Austria',
-          'Denmark', 'Sweden', 'Norway', 'Finland',
-          'Estonia', 'Latvia', 'Lithuania',
-          'Poland', 'Czechia', 'Slovakia', 'Hungary', 'Slovenia', 'Romania', 'Bulgaria',
-          'Albania', 'Bosnia and Herzegovina', 'Serbia', 'Montenegro', 'North Macedonia', 'Kosovo', 'Croatia'
-        ],
-        'Western Europe': ['Germany', 'France', 'Belgium', 'Netherlands', 'UK', 'Ireland'],
-        'Southern Europe': ['Italy', 'Spain', 'Portugal', 'Greece'],
-        'Central Europe': ['Switzerland', 'Austria'],
-        'Nordics': ['Denmark', 'Sweden', 'Norway', 'Finland'],
-        'Baltics': ['Estonia', 'Latvia', 'Lithuania'],
-        'Eastern Europe': ['Poland', 'Czechia', 'Slovakia', 'Hungary', 'Slovenia', 'Romania', 'Bulgaria'],
-        'Balkans': ['Albania', 'Bosnia and Herzegovina', 'Serbia', 'Montenegro', 'North Macedonia', 'Kosovo', 'Croatia'],
-        'Asia': ['Japan', 'China']
-      }
-
-      // If a region is selected and this record is a country in that region, include it
+      // If a region is selected, include its child country records
       for (const selectedGeo of filters.geographies) {
         if (regionToCountries[selectedGeo]?.includes(record.geography)) {
           geoMatch = true
@@ -180,16 +194,10 @@ export function filterData(
         }
       }
 
-      // IMPORTANT: Include Global data when regional geographies are selected
-      // This is because segment types like "By Form" only exist under Global
-      // When user selects "North America" + "By Form", we need Global's By Form data
-      if (!geoMatch && record.geography === 'Global') {
-        // Check if any selected geography is a regional geography (not Global itself)
-        const regionalGeographies = ['North America', 'Europe', 'Asia', 'Western Europe', 'Southern Europe', 'Central Europe', 'Nordics', 'Baltics', 'Eastern Europe', 'Balkans']
-        const hasRegionalSelection = filters.geographies.some(g => regionalGeographies.includes(g))
-        if (hasRegionalSelection && !filters.geographies.includes('Global')) {
-          geoMatch = true
-        }
+      // If countries are selected, include their parent region records
+      // (for segment types that only have region-level data, not country-level)
+      if (!geoMatch && parentRegionsNeeded.has(record.geography)) {
+        geoMatch = true
       }
     }
 
@@ -607,7 +615,74 @@ export function filterData(
     }
   }
   
-  return filtered
+  // POST-FILTER: Country proportional distribution
+  // When countries are selected but filtered records only have parent region data,
+  // distribute region values proportionally to each country based on By Region shares
+  if (selectedCountries.length > 0) {
+    const hasDirectCountryRecords = filtered.some(r => selectedCountries.includes(r.geography))
+
+    if (!hasDirectCountryRecords && filtered.length > 0) {
+      // Records are at region level - need to distribute to countries
+      // Look up country shares from "By Region" records in the full dataset
+      const byRegionRecords = data.filter(r => r.segment_type === 'By Region')
+
+      // Calculate per-year shares for each country
+      const countryShares: Record<string, { parentRegion: string; shares: Record<number, number> }> = {}
+
+      for (const country of selectedCountries) {
+        const parentRegion = countryToRegion[country]
+        // Find the country's By Region record
+        const countryRecord = byRegionRecords.find(r =>
+          r.geography === parentRegion && r.segment === country
+        )
+        // Find the parent region's total record
+        const regionTotalRecord = byRegionRecords.find(r =>
+          r.geography === parentRegion && r.segment === parentRegion
+        )
+
+        if (countryRecord && regionTotalRecord) {
+          const shares: Record<number, number> = {}
+          for (const yearStr of Object.keys(countryRecord.time_series)) {
+            const year = Number(yearStr)
+            const regionTotal = regionTotalRecord.time_series[year] || 1
+            shares[year] = (countryRecord.time_series[year] || 0) / regionTotal
+          }
+          countryShares[country] = { parentRegion, shares }
+        }
+      }
+
+      // Create country-specific records by scaling region data
+      const countryRecords: DataRecord[] = []
+      filtered.forEach(record => {
+        for (const country of selectedCountries) {
+          const info = countryShares[country]
+          if (info && record.geography === info.parentRegion) {
+            const newTimeSeries: Record<number, number> = {}
+            for (const [yearStr, value] of Object.entries(record.time_series)) {
+              const year = Number(yearStr)
+              const share = info.shares[year] || info.shares[Object.keys(info.shares)[0] as any] || 0.5
+              newTimeSeries[year] = (value as number) * share
+            }
+            countryRecords.push({
+              ...record,
+              geography: country,
+              time_series: newTimeSeries,
+              cagr: record.cagr // Keep the same CAGR for now
+            })
+          }
+        }
+      })
+
+      if (countryRecords.length > 0) {
+        return countryRecords
+      }
+    }
+  }
+
+  // Also exclude Global from results when no geographies are selected
+  // (Global still passes the geoMatch check when filters.geographies.length === 0)
+  const finalFiltered = filtered.filter(r => r.geography !== 'Global')
+  return finalFiltered.length > 0 ? finalFiltered : filtered
 }
 
 /**
@@ -871,45 +946,6 @@ export function prepareGroupedBarData(
           let geography = record.geography
           const segment = record.segment
 
-          // Handle Global data mapping to selected regional geographies
-          // When data only exists at Global level but user selected regional geographies,
-          // distribute Global data proportionally across selected regions
-          if (record.geography === 'Global' && !geographies.includes('Global')) {
-            const stackedRegionalGeos = ['North America', 'Europe', 'Asia Pacific', 'Latin America', 'Middle East', 'Africa', 'Middle East & Africa', 'ASEAN', 'SAARC Region', 'CIS Region']
-            const selectedRegionals = geographies.filter(g => stackedRegionalGeos.includes(g))
-            if (selectedRegionals.length > 0) {
-              const regionalMarketShares: Record<string, number> = {
-                'North America': 0.32,
-                'Europe': 0.28,
-                'Asia Pacific': 0.25,
-                'Latin America': 0.08,
-                'Middle East': 0.04,
-                'Africa': 0.03,
-                'Middle East & Africa': 0.07,
-                'ASEAN': 0.10,
-                'SAARC Region': 0.08,
-                'CIS Region': 0.05
-              }
-              const selectedShareSum = selectedRegionals.reduce((sum, region) =>
-                sum + (regionalMarketShares[region] || 0.1), 0
-              )
-              const globalValue = record.time_series[year] || 0
-
-              selectedRegionals.forEach(region => {
-                const regionShare = regionalMarketShares[region] || 0.1
-                const normalizedShare = regionShare / selectedShareSum
-
-                if (!geoMap.has(region)) {
-                  geoMap.set(region, new Map())
-                }
-                const segMapForRegion = geoMap.get(region)!
-                const curVal = segMapForRegion.get(segment) || 0
-                segMapForRegion.set(segment, curVal + globalValue * normalizedShare)
-              })
-              return // Skip normal processing for this Global record
-            }
-          }
-
           // Map child geography to parent if parent is selected
           for (const [region, countries] of Object.entries(regionToCountriesStacked)) {
             if (countries.includes(geography) && geographies.includes(region)) {
@@ -974,65 +1010,9 @@ export function prepareGroupedBarData(
             return // Skip this leaf record, use the aggregated one instead
           }
         } else if (viewMode === 'geography-mode') {
-          // In geography mode, aggregate child geographies under their parent
-          // if the parent is selected (e.g., U.S. + Canada data shown as "North America")
-          const regionToCountries: Record<string, string[]> = {
-            'North America': ['U.S.', 'Canada'],
-            'Europe': ['U.K.', 'Germany', 'Italy', 'France', 'Spain', 'Russia', 'Rest of Europe'],
-            'Asia Pacific': ['China', 'India', 'Japan', 'South Korea', 'ASEAN', 'Australia', 'Rest of Asia Pacific'],
-            'Latin America': ['Brazil', 'Argentina', 'Mexico', 'Rest of Latin America'],
-            'Middle East': ['GCC', 'Israel', 'Rest of Middle East'],
-            'Africa': ['North Africa', 'Central Africa', 'South Africa']
-          }
-
-          // Check if this record's geography should be aggregated under a parent
-          let mappedGeo = record.geography
-
-          // If this is Global data and regional geographies are selected,
-          // map Global to each selected geography (for segment types only available at Global level)
-          if (record.geography === 'Global' && !geographies.includes('Global')) {
-            const regionalGeographies = ['North America', 'Europe', 'Asia', 'Western Europe', 'Southern Europe', 'Central Europe', 'Nordics', 'Baltics', 'Eastern Europe', 'Balkans']
-            const selectedRegionals = geographies.filter(g => regionalGeographies.includes(g))
-            if (selectedRegionals.length > 0) {
-              // Realistic regional market share distribution
-              const regionalMarketShares: Record<string, number> = {
-                'North America': 0.32,
-                'Europe': 0.28,
-                'Asia Pacific': 0.25,
-                'Latin America': 0.08,
-                'Middle East': 0.04,
-                'Africa': 0.03,
-                'Middle East & Africa': 0.07,
-                'ASEAN': 0.10,
-                'SAARC Region': 0.08,
-                'CIS Region': 0.05
-              }
-              // Calculate the sum of market shares for selected regions
-              const selectedShareSum = selectedRegionals.reduce((sum, region) =>
-                sum + (regionalMarketShares[region] || 0.1), 0
-              )
-              const globalValue = record.time_series[year] || 0
-
-              // Distribute Global data proportionally based on regional market shares
-              selectedRegionals.forEach(region => {
-                const regionShare = regionalMarketShares[region] || 0.1
-                const normalizedShare = regionShare / selectedShareSum
-                if (!aggregatedData[region]) {
-                  aggregatedData[region] = 0
-                }
-                aggregatedData[region] += globalValue * normalizedShare
-              })
-              return // Skip the normal aggregation below since we handled it
-            }
-          }
-
-          for (const [region, countries] of Object.entries(regionToCountries)) {
-            if (countries.includes(record.geography) && geographies.includes(region)) {
-              mappedGeo = region
-              break
-            }
-          }
-          key = mappedGeo
+          // In geography mode, use the record's geography directly
+          // Country distribution is handled in filterData
+          key = record.geography
         } else if (viewMode === 'matrix') {
           key = `${record.geography}::${record.segment}`
         } else {
@@ -1193,62 +1173,8 @@ export function prepareLineChartData(
           key = record.segment
         }
       } else if (viewMode === 'geography-mode') {
-        // Lines represent geographies (aggregate across segments)
-        // Map child geographies to their parent if parent is selected
-        const regionToCountriesLine: Record<string, string[]> = {
-          'North America': ['U.S.', 'Canada'],
-          'Europe': ['U.K.', 'Germany', 'Italy', 'France', 'Spain', 'Russia', 'Rest of Europe'],
-          'Asia Pacific': ['China', 'India', 'Japan', 'South Korea', 'ASEAN', 'Australia', 'Rest of Asia Pacific'],
-          'Latin America': ['Brazil', 'Argentina', 'Mexico', 'Rest of Latin America'],
-          'Middle East': ['GCC', 'Israel', 'Rest of Middle East'],
-          'Africa': ['North Africa', 'Central Africa', 'South Africa']
-        }
-
-        let mappedGeo = record.geography
-
-        // If this is Global data and regional geographies are selected,
-        // map Global to each selected geography (for segment types only available at Global level)
-        if (record.geography === 'Global' && !filters.geographies.includes('Global')) {
-          const regionalGeographies = ['North America', 'Europe', 'Asia', 'Western Europe', 'Southern Europe', 'Central Europe', 'Nordics', 'Baltics', 'Eastern Europe', 'Balkans']
-          const selectedRegionals = filters.geographies.filter(g => regionalGeographies.includes(g))
-          if (selectedRegionals.length > 0) {
-            // Realistic regional market share distribution
-            const regionalMarketShares: Record<string, number> = {
-              'North America': 0.32,
-              'Europe': 0.28,
-              'Asia Pacific': 0.25,
-              'Latin America': 0.08,
-              'Middle East': 0.04,
-              'Africa': 0.03,
-              'Middle East & Africa': 0.07,
-              'ASEAN': 0.10,
-              'SAARC Region': 0.08,
-              'CIS Region': 0.05
-            }
-            // Calculate the sum of market shares for selected regions
-            const selectedShareSum = selectedRegionals.reduce((sum, region) =>
-              sum + (regionalMarketShares[region] || 0.1), 0
-            )
-            const globalValue = record.time_series[year] || 0
-
-            // Distribute Global data proportionally based on regional market shares
-            selectedRegionals.forEach(region => {
-              const currentVal = aggregated.get(region) || 0
-              const regionShare = regionalMarketShares[region] || 0.1
-              const normalizedShare = regionShare / selectedShareSum
-              aggregated.set(region, currentVal + globalValue * normalizedShare)
-            })
-            return // Skip the normal aggregation below since we handled it
-          }
-        }
-
-        for (const [region, countries] of Object.entries(regionToCountriesLine)) {
-          if (countries.includes(record.geography) && filters.geographies.includes(region)) {
-            mappedGeo = region
-            break
-          }
-        }
-        key = mappedGeo
+        // Lines represent geographies - use directly (country distribution handled in filterData)
+        key = record.geography
       } else if (viewMode === 'matrix') {
         // Lines represent geography-segment combinations
         key = `${record.geography}::${record.segment}`
@@ -1756,18 +1682,9 @@ export function prepareIntelligentMultiLevelData(
     'Africa': ['North Africa', 'Central Africa', 'South Africa']
   }
 
-  // Check if we need Global-to-regional mapping
-  const regionalGeographies = ['North America', 'Europe', 'Asia', 'Western Europe', 'Southern Europe', 'Central Europe', 'Nordics', 'Baltics', 'Eastern Europe', 'Balkans']
-  const hasRegionalSelection = geographies.some(g => regionalGeographies.includes(g))
-  const hasOnlyGlobalRecords = records.every(r => r.geography === 'Global')
-  const needsGlobalMapping = viewMode === 'geography-mode' && hasRegionalSelection && hasOnlyGlobalRecords && !geographies.includes('Global')
-
-  console.log('📊 prepareIntelligentMultiLevelData Global mapping check:', {
-    hasRegionalSelection,
-    hasOnlyGlobalRecords,
-    needsGlobalMapping,
-    selectedGeographies: geographies
-  })
+  // Global mapping is no longer needed - Global records are excluded in filterData
+  // Country distribution is also handled in filterData
+  const needsGlobalMapping = false
 
   // Check if user explicitly selected Level 1 segments (like "By Saturation", "By Structure")
   // In this case, we want to show each selected segment as a separate series
@@ -1840,23 +1757,9 @@ export function prepareIntelligentMultiLevelData(
         key = record.segment
       }
     } else if (viewMode === 'geography-mode') {
-      // In geography mode, handle Global data mapping to selected regional geographies
-      if (needsGlobalMapping && record.geography === 'Global') {
-        // For Global records, we'll handle them separately in the year loop
-        // For now, map to the first selected regional geography for grouping
-        const selectedRegionals = geographies.filter(g => regionalGeographies.includes(g))
-        key = selectedRegionals[0] || record.geography
-      } else {
-        // Map child geographies to parent if parent is selected
-        let mappedGeo = record.geography
-        for (const [region, countries] of Object.entries(regionToCountries)) {
-          if (countries.includes(record.geography) && geographies.includes(region)) {
-            mappedGeo = region
-            break
-          }
-        }
-        key = mappedGeo
-      }
+      // In geography mode, use the record's geography directly
+      // Country distribution is handled in filterData
+      key = record.geography
     } else {
       key = record.geography
     }
@@ -1872,61 +1775,6 @@ export function prepareIntelligentMultiLevelData(
 
   return years.map(year => {
     const dataPoint: ChartDataPoint = { year }
-
-    // Special handling for geography-mode with Global data mapping
-    if (needsGlobalMapping) {
-      // Get the selected regional geographies
-      const selectedRegionals = geographies.filter(g => regionalGeographies.includes(g))
-
-      // Realistic regional market share distribution (percentages of global market)
-      // These represent typical market distribution patterns
-      const regionalMarketShares: Record<string, number> = {
-        'North America': 0.32,      // ~32% of global market
-        'Europe': 0.28,             // ~28% of global market
-        'Asia Pacific': 0.25,       // ~25% of global market
-        'Latin America': 0.08,      // ~8% of global market
-        'Middle East': 0.04,        // ~4% of global market
-        'Africa': 0.03,             // ~3% of global market
-        'Middle East & Africa': 0.07,
-        'ASEAN': 0.10,
-        'SAARC Region': 0.08,
-        'CIS Region': 0.05
-      }
-
-      // Calculate total from Global records
-      let globalTotal = 0
-      segmentGroups.forEach((groupRecords) => {
-        const leafRecord = groupRecords.find(r => !r.is_aggregated)
-        if (leafRecord) {
-          globalTotal += leafRecord.time_series[year] || 0
-        } else {
-          const bestRecord = groupRecords.reduce((best, current) => {
-            if (!best) return current
-            const currentLevel = current.aggregation_level ?? 0
-            const bestLevel = best.aggregation_level ?? 0
-            return currentLevel < bestLevel ? current : best
-          }, null as DataRecord | null)
-          if (bestRecord) {
-            globalTotal += bestRecord.time_series[year] || 0
-          }
-        }
-      })
-
-      // Calculate the sum of market shares for selected regions only
-      const selectedShareSum = selectedRegionals.reduce((sum, region) =>
-        sum + (regionalMarketShares[region] || 0.1), 0
-      )
-
-      // Distribute Global data proportionally based on regional market shares
-      selectedRegionals.forEach(region => {
-        const regionShare = regionalMarketShares[region] || 0.1
-        // Normalize the share relative to selected regions and apply to global total
-        const normalizedShare = regionShare / selectedShareSum
-        dataPoint[region] = globalTotal * normalizedShare
-      })
-
-      return dataPoint
-    }
 
     // Check if this is a regional segment type
     const isRegionalSegmentType = filters.segmentType === 'By Region' ||
